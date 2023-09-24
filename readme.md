@@ -14,9 +14,13 @@
             - [Protecting `deleteEmployee` and `updateEmployee` Endpoints](#protecting-deleteemployee-and-updateemployee-endpoints)
             - [How to Test Role-Based Access](#how-to-test-role-based-access)
     - [Added relevant dependencies](#added-relevant-dependencies)
+    - [Running Running the Spring Boot Application in a Docker Container](#running-running-the-spring-boot-application-in-a-docker-container)
+        - [Prerequisites](#prerequisites)
+        - [Build and Run the Docker Container](#build-and-run-the-docker-container)
+    - [Code Coverage Report](#code-coverage-report)
     - [Future Improvements and Plan](#future-improvements-and-plan)
     - [My experience in Java](#my-experience-in-java)
-  
+
 ### How to use this spring-boot project
 
 - Install packages with `mvn package`
@@ -127,6 +131,58 @@ By implementing role-based access control in this manner, you can ensure that se
 ### Added relevant dependencies
 
 - Spring security and mockito for the security and test. 
+
+### Running Running the Spring Boot Application in a Docker Container
+
+This guide outlines the steps to run the Spring Boot application inside a Docker container.
+
+#### Prerequisites
+
+Before you proceed, ensure you have the following prerequisites installed on your system:
+
+- Docker: [Install Docker](https://docs.docker.com/get-docker/)
+
+#### Build and Run the Docker Container
+
+1. **Clone the Repository:**
+
+   ```shell
+   git clone https://github.com/subhani92/java-challenge.git
+   cd java-challenge
+   git checkout develop 
+   ```
+
+2. **Build docker image**
+   
+   ```shell
+   docker build -t <image_name> .
+
+  - EXAMPLE:
+      ```shell
+     docker build -t api-demo-application .
+    ```
+   
+3. **Run the container **
+     ```shell
+    docker run -p <port_mapping> <image_name>
+     ```
+- Example
+    ```shell
+    docker run -p 8080:8080 api-demo-application
+    ```
+
+### Code Coverage Report
+I am using jacoco plugin to generate the report. 
+Here's the code coverage report for the project:
+
+| GROUP   | PACKAGE                        | CLASS                  | INSTRUCTION_MISSED | INSTRUCTION_COVERED | BRANCH_MISSED | BRANCH_COVERED | LINE_MISSED | LINE_COVERED | COMPLEXITY_MISSED | COMPLEXITY_COVERED | METHOD_MISSED | METHOD_COVERED |
+| ------- | ------------------------------ | ----------------------- | ------------------- | -------------------- | ------------- | --------------- | ----------- | ------------ | ----------------- | ------------------ | ------------- | -------------- |
+| api-demo| jp.co.axa.apidemo              | ApiDemoApplication      | 5                   | 3                    | 0             | 0               | 2           | 1            | 1                 | 1                  | 1             | 1              |
+| api-demo| jp.co.axa.apidemo.services     | EmployeeServiceImpl    | 37                  | 3                    | 0             | 0               | 12          | 1            | 6                 | 1                  | 6             | 1              |
+| api-demo| jp.co.axa.apidemo.entities     | Employee               | 6                   | 25                   | 0             | 0               | 2           | 7            | 2                 | 7                  | 2             | 7              |
+| api-demo| jp.co.axa.apidemo.controllers  | EmployeeController     | 6                   | 68                   | 2             | 8               | 2           | 22           | 2                 | 9                  | 0             | 6              |
+
+This report provides details about code coverage for different parts of the project, including instructions, branches, lines, complexity, and methods.
 
 
 ### Future Improvements and Plan
