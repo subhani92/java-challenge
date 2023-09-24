@@ -1,4 +1,23 @@
-  ### How to use this spring-boot project
+# Table of Contents
+- [How to use this spring-boot project](#how-to-use-this-spring-boot-project)
+- [Instructions](#instructions)
+- [Restrictions](#restrictions)
+- [What we will look for](#what-we-will-look-for)
+- [Spring Boot Employee Management System](#spring-boot-employee-management-system)
+    - [Changes Made](#changes-made)
+        - [Improved Endpoint URLs](#improved-endpoint-urls)
+        - [Response Entities](#response-entities)
+        - [HTTP Status Codes](#http-status-codes)
+        - [Validations](#validations)
+        - [Request Body](#request-body)
+        - [Role-Based Access Control](#role-based-access-control)
+            - [Protecting `deleteEmployee` and `updateEmployee` Endpoints](#protecting-deleteemployee-and-updateemployee-endpoints)
+            - [How to Test Role-Based Access](#how-to-test-role-based-access)
+    - [Added relevant dependencies](#added-relevant-dependencies)
+    - [Future Improvements and Plan](#future-improvements-and-plan)
+    - [My experience in Java](#my-experience-in-java)
+  
+### How to use this spring-boot project
 
 - Install packages with `mvn package`
 - Run `mvn spring-boot:run` for starting the application (or use your IDE)
