@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import org.springframework.security.access.annotation.Secured;
+
 import java.util.List;
 
 @RestController
@@ -73,6 +75,7 @@ public class EmployeeController {
      */
     @DeleteMapping("/{employeeId}")
     @CacheEvict(value = "employees", allEntries = true)
+    @Secured("ROLE_ADMIN") // Protect with role-based access control
     public ResponseEntity<Void> deleteEmployee(@PathVariable Long employeeId) {
         boolean deleted = employeeService.deleteEmployee(employeeId);
         if (deleted) {
@@ -92,6 +95,7 @@ public class EmployeeController {
      */
     @PutMapping("/{employeeId}")
     @CacheEvict(value = "employees", allEntries = true)
+    @Secured("ROLE_ADMIN") // Protect with role-based access control
     public ResponseEntity<Void> updateEmployee(
             @PathVariable Long employeeId,
             @RequestBody Employee employee) {
