@@ -43,10 +43,96 @@ Application (with the embedded H2 database) is ready to be used ! You can access
 - Is the application running as expected
 - No performance issues
 
-#### Your experience in Java
+## Spring Boot Employee Management System
 
-Please let us know more about your Java experience in a few sentences. For example:
+This Spring Boot project is a simple Employee Management System that allows you to perform CRUD operations on employee records. Below are the changes made to the `EmployeeController` and an overview of the modifications.
 
-- I have 3 years experience in Java and I started to use Spring Boot from last year
-- I'm a beginner and just recently learned Spring Boot
-- I know Spring Boot very well and have been using it for many years
+## Changes Made
+
+### Improved Endpoint URLs
+
+1. **Original URL**: `/api/v1`  
+   **Modified URL**: `/api/v1/employees`
+
+   We improved the organization of endpoints by moving them under the `/employees` path. This makes the API more intuitive and organized.
+
+### Response Entities
+
+2. **Original**: Directly returning domain objects or using `void`  
+   **Modified**: Returning `ResponseEntity` for better control over HTTP responses
+
+   We enhanced the responses by returning `ResponseEntity` objects. This provides a clear way to handle various HTTP status codes and response bodies.
+
+### HTTP Status Codes
+
+3. **Original**: Not consistently returning appropriate HTTP status codes  
+   **Modified**: Using standard HTTP status codes for responses
+
+   We revised the controller methods to return standard HTTP status codes, such as `200 OK`, `201 Created`, `204 No Content`, and `404 Not Found`, to improve the API's consistency and clarity.
+
+### Validations
+
+4. **Original**: Minimal input validation  
+   **Modified**: Added input validation checks for `POST` and `PUT` requests
+
+   We added input validation checks to ensure that invalid data is rejected with a `400 Bad Request` status.
+
+### Request Body
+
+5. **Original**: Accepting `Employee` objects as method parameters  
+   **Modified**: Accepting `Employee` objects as request bodies
+
+   We modified the `@RequestBody` annotation to indicate that the `Employee` object is part of the request body, improving clarity.
+
+### Role-Based Access Control
+
+This Spring Boot project supports role-based access control (RBAC) to restrict access to specific API endpoints based on user roles. Here are the details of role-based access control in this project:
+
+#### Protecting `deleteEmployee` and `updateEmployee` Endpoints
+
+The `deleteEmployee` and `updateEmployee` endpoints have been secured using the `@Secured` annotation to ensure that only users with the `ROLE_ADMIN` role can access them. Here's how it works:
+
+- `deleteEmployee`: This endpoint allows the deletion of employee records. To access this endpoint, a user must have the `ROLE_ADMIN` role. Users without this role will receive a 403 Forbidden response if they attempt to delete an employee.
+
+- `updateEmployee`: This endpoint allows the updating of employee records. Similar to `deleteEmployee`, it requires the `ROLE_ADMIN` role for access. Unauthorized users will receive a 403 Forbidden response when attempting to update an employee.
+
+#### How to Test Role-Based Access
+
+To test role-based access control, you can follow these steps:
+
+1. Try to access these endpoints with user accounts that do not have the `ROLE_ADMIN` role. You should receive a 403 Forbidden response, indicating that access is restricted.
+
+By implementing role-based access control in this manner, you can ensure that sensitive operations like deleting and updating employee records are protected and only accessible to authorized users with the `ROLE_ADMIN` role.
+
+
+### Added relevant dependencies
+
+- Spring security and mockito for the security and test. 
+
+
+### Future Improvements and Plan
+
+In the future, we can plan to further enhance this Employee Management System by implementing the following features and improvements:
+
+1. **User Authentication**: Implement user authentication and role-based access control to secure the API endpoints. This will allow different levels of access for administrators and regular users.
+
+2. **Pagination**: Introduce pagination support for listing employees. This will improve the efficiency of handling large datasets.
+
+3. **Validation Enhancements**: Strengthen input validation and data validation logic to ensure data integrity and security.
+
+4. **Logging**: Implement comprehensive logging to track API requests and responses for monitoring and debugging purposes.
+
+5. **Database Integration**: Explore integration with a production-ready database such as MySQL or PostgreSQL for data persistence.
+
+6. **Exception Handling**: Enhance exception handling to provide meaningful error messages and responses to clients.
+
+7. **Testing**: Expand the test coverage by adding unit tests, integration tests, and end-to-end tests to ensure the reliability of the application.
+
+8. **Documentation**: Continue to improve code comments and generate API documentation using tools like Swagger for better developer and user experience.
+
+9. **Frontend**: Develop a user-friendly frontend interface for managing employees, making it accessible through a web-based dashboard.
+
+
+#### My experience in Java
+
+- I have 3 years experience in Java and I started to use Spring Boot from last 2 year.
