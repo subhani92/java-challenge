@@ -5,57 +5,105 @@ import jp.co.axa.apidemo.services.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/employees")
 public class EmployeeController {
 
-    @Autowired
-    private EmployeeService employeeService;
+    private final EmployeeService employeeService;
 
-    public void setEmployeeService(EmployeeService employeeService) {
+    @Autowired
+    public EmployeeController(EmployeeService employeeService) {
         this.employeeService = employeeService;
     }
 
-    @GetMapping("/employees")
+    /**
+     * Retrieves a list of employees.
+     *
+     * @return List of employees
+     */
+    @GetMapping
     @Cacheable("employees")
-    public List<Employee> getEmployees() {
+    public ResponseEntity<List<Employee>> getEmployees() {
         List<Employee> employees = employeeService.retrieveEmployees();
-        return employees;
+        return ResponseEntity.ok(employees);
     }
 
-    @GetMapping("/employees/{employeeId}")
-    public Employee getEmployee(@PathVariable(name="employeeId")Long employeeId) {
-        return employeeService.getEmployee(employeeId);
+    /**
+     * Retrieves an employee by ID.
+     *
+     * @param employeeId The ID of the employee to retrieve
+     * @return The employee with the specified ID or 404 Not Found if not found
+     */
+    @GetMapping("/{employeeId}")
+    public ResponseEntity<Employee> getEmployee(@PathVariable Long employeeId) {
+        Employee employee = employeeService.getEmployee(employeeId);
+        if (employee != null) {
+            return ResponseEntity.ok(employee);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
-    @PostMapping("/employees")
-    public void saveEmployee(Employee employee){
+    /**
+     * Saves a new employee.
+     *
+     * @param employee The employee to be saved
+     * @return 201 Created if successful, 400 Bad Request if invalid data
+     */
+    @PostMapping
+    public ResponseEntity<Void> saveEmployee(@RequestBody Employee employee) {
+        if (employee == null) {
+            return ResponseEntity.badRequest().build();
+        }
         employeeService.saveEmployee(employee);
-        System.out.println("Employee Saved Successfully");
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @DeleteMapping("/employees/{employeeId}")
-    @CacheEvict(value = "employees", allEntries = true) // Clear cache on delete
-    public void deleteEmployee(@PathVariable(name="employeeId")Long employeeId){
-        employeeService.deleteEmployee(employeeId);
-        System.out.println("Employee Deleted Successfully");
+    /**
+     * Deletes an employee by ID.
+     *
+     * @param employeeId The ID of the employee to delete
+     * @return 204 No Content if successful, 404 Not Found if not found
+     */
+    @DeleteMapping("/{employeeId}")
+    @CacheEvict(value = "employees", allEntries = true)
+    public ResponseEntity<Void> deleteEmployee(@PathVariable Long employeeId) {
+        boolean deleted = employeeService.deleteEmployee(employeeId);
+        if (deleted) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
-    @PutMapping("/employees/{employeeId}")
-    @CacheEvict(value = "employees", allEntries = true) // Clear cache on update
-    public void updateEmployee(@RequestBody Employee employee,
-                               @PathVariable(name="employeeId")Long employeeId) {
-        Employee emp = employeeService.getEmployee(employeeId);
-        if(emp != null){
+    /**
+     * Updates an existing employee by ID.
+     *
+     * @param employeeId The ID of the employee to update
+     * @param employee   The updated employee data
+     * @return 204 No Content if successful, 400 Bad Request if invalid data,
+     *         404 Not Found if employee not found
+     */
+    @PutMapping("/{employeeId}")
+    @CacheEvict(value = "employees", allEntries = true)
+    public ResponseEntity<Void> updateEmployee(
+            @PathVariable Long employeeId,
+            @RequestBody Employee employee) {
+        if (employee == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        Employee existingEmployee = employeeService.getEmployee(employeeId);
+        if (existingEmployee != null) {
             employeeService.updateEmployee(employee);
-        }
-        else {
-            System.out.print("Employee not found with ID: " + employeeId);
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
         }
     }
-
 }
